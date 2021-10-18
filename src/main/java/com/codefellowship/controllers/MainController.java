@@ -71,4 +71,17 @@ public class MainController {
         model.addAttribute("user" , applicationUserRepository.findById(id).get());
         return "user";
     }
+    @GetMapping("/myprofile")
+    public String profile(Model model){
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (principal instanceof UserDetails) {
+            String username = ((UserDetails)principal).getUsername();
+            ApplicationUser user = applicationUserRepository.findByUsername(username);
+            model.addAttribute("username" , username);
+            model.addAttribute("user" , user);
+        } else {
+            String username = principal.toString();
+        }
+        return "profile";
+    }
 }

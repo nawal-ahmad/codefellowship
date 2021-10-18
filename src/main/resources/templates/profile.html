@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Profile</title>
+</head>
+<body>
+<div th:replace="header :: header">...</div>
+
+<div class="allpage">
+
+  <div class="card">
+    <img src="https://www.pixsy.com/wp-content/uploads/2021/04/ben-sweet-2LowviVHZ-E-unsplash-1.jpeg" alt="Avatar" style="width:100%">
+    <div class="container">
+      <h4><b>username: <span th:text="${user.username}"></span></b></h4>
+      <p>first name: <span th:text="${user.firstName}"></span></p>
+      <p>last name: <span th:text="${user.lastName}"></span></p>
+      <p>date of birth: <span th:text="${user.dateOfBirth}"></span></p>
+      <p>bio: <span th:text="${user.bio}"></span></p>
+    </div>
+  </div>
+ </div>
+
+</div>
+
+</body>
+</html>
