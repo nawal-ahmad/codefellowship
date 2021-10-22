@@ -14,9 +14,14 @@ public class Post {
     @Column(name = "id", nullable = false)
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "post_id")
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    @ManyToOne()
+    @JoinColumn(name = "post_id",nullable = false)
     private ApplicationUser applicationUser;
+
     private String body;
 
     @CreationTimestamp
@@ -59,5 +64,6 @@ public class Post {
     public Long getId() {
         return id;
     }
+
 }
 

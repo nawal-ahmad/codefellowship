@@ -22,8 +22,8 @@ public class ApplicationUser implements UserDetails {
     private String dateOfBirth;
     private String bio;
 
-    @OneToMany (mappedBy = "applicationUser")
-    private List<Post> writtenPost;
+    @OneToMany (mappedBy = "applicationUser", fetch = FetchType.EAGER)
+    private List<Post> posts;
 
     public ApplicationUser() {
     }
@@ -38,13 +38,6 @@ public class ApplicationUser implements UserDetails {
         this.bio = bio;
     }
 
-    public List<Post> getWrittenPost() {
-        return writtenPost;
-    }
-
-    public void setWrittenPost(List<Post> writtenPost) {
-        this.writtenPost = writtenPost;
-    }
 
     public Long getId() {
         return id;
@@ -125,5 +118,13 @@ public class ApplicationUser implements UserDetails {
 
     public void setBio(String bio) {
         this.bio = bio;
+    }
+
+    public List<Post> getPosts() {
+        return posts;
+    }
+
+    public void setPosts(List<Post> posts) {
+        this.posts = posts;
     }
 }
