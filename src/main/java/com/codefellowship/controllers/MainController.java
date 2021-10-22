@@ -1,7 +1,9 @@
 package com.codefellowship.controllers;
 
 import com.codefellowship.models.ApplicationUser;
+import com.codefellowship.models.Post;
 import com.codefellowship.repositories.ApplicationUserRepository;
+import com.codefellowship.repositories.PostRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -22,6 +24,9 @@ public class MainController {
     ApplicationUserRepository applicationUserRepository;
     @Autowired
     BCryptPasswordEncoder bCryptPasswordEncoder;
+
+    @Autowired
+    PostRepository postRepository;
 
     @GetMapping("/")
     public String getHome(){
@@ -59,6 +64,24 @@ public class MainController {
         model.addAttribute("username", applicationUserRepository.findApplicationUserById(id));
         return ("profile");
     }
+
+    @GetMapping("/posts")
+    public String getPostForUsername(Model model , Principal principal) {
+        ApplicationUser applicationUser = applicationUserRepository.findApplicationUserByUsername(principal.getName());
+        model.addAttribute("username" , applicationUser);
+        return "posts";
+    }
+
+    @PostMapping("/posts")
+    public RedirectView createPostUsername(Model model , Principal principal , String body)
+    {
+        ApplicationUser applicationUser = applicationUserRepository.findApplicationUserByUsername(principal.getName());
+        Post post = new Post(applicationUser , body);
+        post = postRepository.save(post);
+        model.addAttribute("username" , applicationUser.getWrittenPost());
+        return  new RedirectView("/profile");
+    }
+
 
 
 }
