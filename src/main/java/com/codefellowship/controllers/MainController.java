@@ -3,85 +3,62 @@ package com.codefellowship.controllers;
 import com.codefellowship.models.ApplicationUser;
 import com.codefellowship.repositories.ApplicationUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.view.RedirectView;
 
+import java.security.Principal;
+import java.util.ArrayList;
+
 @Controller
-
 public class MainController {
-
     @Autowired
     ApplicationUserRepository applicationUserRepository;
     @Autowired
     BCryptPasswordEncoder bCryptPasswordEncoder;
 
-
     @GetMapping("/")
-    public String splash(){
-        return"splash";
-    }
-
-    @GetMapping("/home")
-    public String home(Model model){
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        if (principal instanceof UserDetails) {
-            String username = ((UserDetails)principal).getUsername();
-            model.addAttribute("username" , username);
-        } else {
-            String username = principal.toString();
-        }
-        return"home";
+    public String getHome(){
+        return "home";
     }
 
     @GetMapping("/signup")
-    public String signUp(){
+    public String getSignUpPage() {
         return "signup";
     }
 
     @GetMapping("/login")
-    public String logIn(){
-        return "signin";
+    public String getSignInPage() {
+        return "login";
+    }
+
+    @GetMapping("/profile")
+    public String profileInformation(Model model, Principal principal) {
+        ApplicationUser applicationUser = applicationUserRepository.findApplicationUserByUsername(principal.getName());
+        model.addAttribute("username", applicationUser);
+        return "profile";
     }
 
     @PostMapping("/signup")
-    public RedirectView signUp(@ModelAttribute ApplicationUser object){
-        ApplicationUser newUser = new ApplicationUser(object.getUsername(),bCryptPasswordEncoder.encode(object.getPassword()) , object.getFirstName(), object.getLastName(), object.getDateOfBirth(), object.getBio());
-        applicationUserRepository.save(newUser);
-        return new RedirectView("login");
+    public RedirectView attemptSignUp(@RequestParam String username, @RequestParam String password, @RequestParam String firstName, @RequestParam String lastName, @RequestParam String dateOfBirth, @RequestParam String bio) {
+        ApplicationUser applicationUser = new ApplicationUser(username, bCryptPasswordEncoder.encode(password), firstName, lastName, dateOfBirth, bio);
+        applicationUser = applicationUserRepository.save(applicationUser);
+        Authentication authentication = new UsernamePasswordAuthenticationToken(applicationUser, null, new ArrayList<>());
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+        return new RedirectView("/login");
+    }
+
+    @GetMapping("users/{id}")
+    public String getUserById(@PathVariable Long id, Model model) {
+        model.addAttribute("username", applicationUserRepository.findApplicationUserById(id));
+        return ("profile");
     }
 
 
-    @GetMapping("/users/{id}")
-    public String userInfo(Model model, @PathVariable("id") int id){
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        if (principal instanceof UserDetails) {
-            String username = ((UserDetails)principal).getUsername();
-            model.addAttribute("username" , username);
-        } else {
-            String username = principal.toString();
-        }
-        model.addAttribute("user" , applicationUserRepository.findById(id).get());
-        return "user";
-    }
-    @GetMapping("/myprofile")
-    public String profile(Model model){
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        if (principal instanceof UserDetails) {
-            String username = ((UserDetails)principal).getUsername();
-            ApplicationUser user = applicationUserRepository.findByUsername(username);
-            model.addAttribute("username" , username);
-            model.addAttribute("user" , user);
-        } else {
-            String username = principal.toString();
-        }
-        return "profile";
-    }
 }
