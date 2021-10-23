@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>All Users page</title>
+</head>
+<body>
+<main>
+    <div class="cards">
+        <div class="card" style="width: 18rem;" th:each="user:${allusers}">
+            <div class="card-body">
+                <h5 class="card-title" th:text="${user.firstName + ' ' + user.lastName}"></h5>
+                <h6 class="card-subtitle mb-2 text-muted" th:text="${user.username}"></h6>
+                <p class="card-text" th:text="${user.bio}"></p>
+            </div>
+            <form method="post" th:action="@{'/follow?id='+${user.id}}">
+                <button class="btn btn-primary" th:if="true" type="submit">Follow</button>
+
+            </form>
+<!--            <form method="post" th:action="@{'/follow?id='+${user.id}}">-->
+<!--                <button class="btn btn-primary" th:if="${userFollow.contains(user) != true and userInfo != user.username}" type="submit">Follow</button>-->
+<!--            </form>-->
+        </div>
+    </div>
+</main>
+</body>
+</html>

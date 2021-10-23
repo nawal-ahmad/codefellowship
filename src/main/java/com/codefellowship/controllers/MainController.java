@@ -18,6 +18,7 @@ import org.springframework.web.servlet.view.RedirectView;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @Controller
 
@@ -33,7 +34,7 @@ public class MainController {
     PostRepository postRepository;
 
     @GetMapping("/")
-    public String getHome(){
+    public String getHome() {
         return "home";
     }
 
@@ -54,7 +55,7 @@ public class MainController {
     }
 
     @PostMapping("/signup")
-    public RedirectView attemptSignUp(@ModelAttribute ApplicationUser user){
+    public RedirectView attemptSignUp(@ModelAttribute ApplicationUser user) {
         ApplicationUser newUser = new ApplicationUser(user.getUsername(),
                 bCryptPasswordEncoder.encode(user.getPassword()),
                 user.getFirstName(), user.getLastName(), user.getDateOfBirth(), user.getBio());
@@ -71,7 +72,7 @@ public class MainController {
     }
 
     @GetMapping("/myprofile")
-    public String getUserProfile(Principal p, Model m){
+    public String getUserProfile(Principal p, Model m) {
         ApplicationUser user = applicationUserRepository.findUserByUsername(p.getName());
         m.addAttribute("username", p.getName());
         m.addAttribute("userProfile", user);
@@ -79,35 +80,45 @@ public class MainController {
     }
 
 
-//        List<Post> posts = user.getposts();
-//        m.addAttribute("posts");
-
     @PostMapping("/addPost")
-    public RedirectView addPost(Principal p, String body){
+    public RedirectView addPost(Principal p, String body) {
         ApplicationUser newUser = applicationUserRepository.findUserByUsername(p.getName());
         Post post = new Post(newUser, body);
         postRepository.save(post);
         return new RedirectView("/myprofile");
     }
 
-
-//    @GetMapping("/posts")
-//    public String getPostForUsername(Model model , Principal principal) {
-//        ApplicationUser applicationUser = applicationUserRepository.findApplicationUserByUsername(principal.getName());
-//        model.addAttribute("username" , applicationUser);
-//        return "posts";
+    //    @GetMapping("/allusers")
+//    public String showAllUsers(Principal p , Model m){
+//        Iterable<ApplicationUser> allUsers = applicationUserRepository.findAll();
+//        m.addAttribute("allUsers", allUsers);
+//        return "allusers";
 //    }
-//
-//    @PostMapping("/posts")
-//    public RedirectView createPostUsername(Model model , Principal principal , String body)
-//    {
-//        ApplicationUser applicationUser = applicationUserRepository.findApplicationUserByUsername(principal.getName());
-//        Post post = new Post(applicationUser , body);
-//        post = postRepository.save(post);
-//        model.addAttribute("username" , applicationUser.getWrittenPost());
-//        return  new RedirectView("/profile");
-//    }
+    @GetMapping("/allusers")
+    public String getAllUsers(Principal principle, Model model) {
+        model.addAttribute("userInfo", principle.getName());
+        model.addAttribute("allusers", applicationUserRepository.findAll());
+        ApplicationUser user = applicationUserRepository.findUserByUsername(principle.getName());
+        model.addAttribute("userFollow", user.getFollowers());
+        return "allusers";
+    }
 
+    @PostMapping("/follow")
+    public RedirectView addFollow(Principal principle, @RequestParam long id) {
+        ApplicationUser me = applicationUserRepository.findUserByUsername(principle.getName());
+        ApplicationUser toFollow = applicationUserRepository.findById(id).get();
+        me.getFollowers().add(toFollow);
+        applicationUserRepository.save(me);
+        return new RedirectView("/feed");
+    }
 
+    @GetMapping("/feed")
+    public String getFollowingInfo(Principal principle, Model model) {
+            model.addAttribute("userInfo", principle.getName());
+            ApplicationUser user = applicationUserRepository.findUserByUsername(principle.getName());
+            Set<ApplicationUser> whoIFollow = user.getFollowers();
+            model.addAttribute("Allfollowing", whoIFollow);
+        return "feed";
+    }
 
 }
