@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en"  xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
     <title>sign up</title>
 </head>
 <body>
-<form action="#" th:action="@{/signup}" method="post" th:object="${object}">
+<form action="/signup" method="post">
     <fieldset>
         <legend>sign up</legend>
         <label for="username">User Name</label>

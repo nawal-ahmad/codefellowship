@@ -3,24 +3,27 @@ package com.codefellowship.models;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.util.Collection;
+import java.util.List;
 
 @Entity
 public class ApplicationUser implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    @Column(name = "id", nullable = false)
+    private Long id;
 
+    @Column(unique = true)
     private String username;
     private String password;
     private String firstName;
     private String lastName;
     private String dateOfBirth;
     private String bio;
+
+    @OneToMany (mappedBy = "applicationUser", fetch = FetchType.EAGER)
+    private List<Post> posts;
 
     public ApplicationUser() {
     }
@@ -35,11 +38,12 @@ public class ApplicationUser implements UserDetails {
         this.bio = bio;
     }
 
-    public int getId() {
+
+    public Long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -114,5 +118,13 @@ public class ApplicationUser implements UserDetails {
 
     public void setBio(String bio) {
         this.bio = bio;
+    }
+
+    public List<Post> getPosts() {
+        return posts;
+    }
+
+    public void setPosts(List<Post> posts) {
+        this.posts = posts;
     }
 }
