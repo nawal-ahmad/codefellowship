@@ -26,7 +26,7 @@ public class Post {
 
     @CreationTimestamp
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd||HH:mm:ss")
     private LocalDateTime createdAt;
 
     public Post() {

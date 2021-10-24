@@ -1,40 +1,52 @@
 <!DOCTYPE html>
-<html lang="en"  xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml" xmlns:ta="http://www.w3.org/1999/xhtml">
+
+
 <head>
     <meta charset="UTF-8">
     <title>Profile Information</title>
+
 </head>
 <body>
-<h1>welcome to Your Profile this is your data </h1>
+
+<h1>Welcome to Your Profile </h1>
 
 <main>
-    <div>
-        <img src="https://www.marmuq.com/assets/front/images/logo/user2.png" alt="ProfilePicture">
-        <p>First Name: <span th:text="${userProfile.firstName}"></span></p>
-        <p>Last Name: <span th:text="${userProfile.lastName}"></span></p>
-        <p>Date of birth: <span th:text="${userProfile.dateOfBirth}"></span></p>
-        <p>Bio: <span th:text="${userProfile.bio}"></span></p>
+    <div class="card" style="width: 18rem;">
+        <img src="https://www.marmuq.com/assets/front/images/logo/user2.png" class="card-img-top" alt="ProfilePicture">
+        <div class="card-body">
+            <h5 class="card-text" th:text="${userProfile.firstName} + ${userProfile.lastName}"/>
+            <p class="card-text" th:text="${userProfile.bio}"/>
+            <p class="card-text" th:text="${userProfile.dateOfBirth}"/>
+        </div>
+
     </div>
-    <div>
-        <form action="/addPost" method="post">
-            <label for="body">Add a post: <br></label>
-            <input type="textarea" name="body" id="body">
-            <button type="submit">Add post</button>
-        </form>
-    </div>
+    <br>
+    <br>
+
+    <form action="/addPost" method="post">
+        <fieldset>
+            <div class="mb-3">
+                <label class="form-label">Add a post</label>
+                <input type="textarea" class="form-control" name="body">
+                </br>
+                <button type="submit" class="btn btn-primary" name="password">submit</button>
+            </div>
+        </fieldset>
+    </form>
 
     <br>
-    <h3>Posts: </h3>
-    <hr>
-    <div>
-        <div th:each="post : ${userProfile.posts}">
-            <p th:text="${post.body}"></p>
-            <p th:text="${post.createdAt}"></p>
-            <hr>
-        </div>
-    </div>
+    <br>
+
+    <form th:each="post : ${userProfile.posts}">
+        <legend>Posts</legend>
+        <fieldset>
+            <div class="mb-3">
+                <p th:text="${post.body}"></p>
+                <p th:text="${post.createdAt}"></p>
+            </div>
+        </fieldset>
+    </form>
 </main>
-
-
 </body>
 </html>
