@@ -7,13 +7,16 @@
 <body>
 
 <div th:fragment="welcomeMessage">
-    <h2 style="width: 80%;">Hello <span th:text="${userInfoName}"></span> :)</h2>
-    <form style="float: right;" action="perform_logout" method="get">
-        <button type="submit">Logout</button>
-    </form>
+  <h2 style="width: 80%;">Hello <span th:text="${userInfoName}"></span> :)</h2>
+  <form style="float: right;" action="perform_logout" method="get">
+    <button type="submit">Logout</button>
+  </form>
 </div>
 
 
+<footer th:fragment="footer">
+  <p style="text-align: center;">&copy; 2021 codefellowship.com</p>
+</footer>
 
 
 </body>

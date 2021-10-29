@@ -8,17 +8,13 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <link rel="stylesheet" th:href="@{/css/style.css}">
-
-
 </head>
 <body>
 <div th:replace="header :: header"></div>
 
-<h1>Welcome to Your Profile </h1>
-
 <main>
     <div class="card" style="width: 18rem;">
-        <img src="https://www.marmuq.com/assets/front/images/logo/user2.png" class="card-img-top" alt="ProfilePicture">
+        <img src="https://us.123rf.com/450wm/solazell/solazell1406/solazell140600002/29687438-profile.jpg?ver=6" class="card-img-top" alt="ProfilePicture">
         <div class="card-body">
             <h5 class="card-text" th:text="${userProfile.firstName} + ${userProfile.lastName}"/>
             <p class="card-text" th:text="${userProfile.bio}"/>
@@ -43,16 +39,20 @@
     <br>
     <br>
 
-    <form th:each="post : ${userProfile.posts}">
-        <legend>Posts</legend>
-        <fieldset>
-            <div class="mb-3">
-                <p th:text="${post.body}"></p>
-                <p th:text="${post.createdAt}"></p>
-            </div>
-        </fieldset>
-    </form>
+    <div width=30% >
+      <div class="card" th:each="post : ${userProfile.posts}">
+          <div class="card-header" >
+            
+              <p th:text="${post.createdAt}">
+          </div>
+      <div class="card-body">
+        <blockquote class="blockquote mb-0">
+          <p th:text="${post.body}">
+        </blockquote>
+      </div>
+    </div>
 </main>
-</body>
 <div th:replace="footer :: footer"></div>
+
+</body>
 </html>

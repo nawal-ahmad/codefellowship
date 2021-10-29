@@ -1,34 +1,59 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
-<head>
-    <meta charset="UTF-8">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet"
-          integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
-    <link rel="stylesheet" th:href="@{/css/style.css}">
-    <title>All Users page</title>
-</head>
-<body>
-<div th:replace="header :: header"></div>
-<main>
-    <div class="cards">
-        <div class="card" style="width: 18rem;" th:each="user:${allusers}">
-            <div class="card-body">
-                <h5 class="card-title" th:text="${user.firstName + ' ' + user.lastName}"></h5>
-                <h6 class="card-subtitle mb-2 text-muted" th:text="${user.username}"></h6>
-                <p class="card-text" th:text="${user.bio}"></p>
-            </div>
-            <form method="post" th:action="@{'/follow?id='+${user.id}}">
-                <button class="btn btn-primary" th:if="true" type="submit">Follow</button>
+<html
+  lang="en"
+  xmlns:th="http://www.thymeleaf.org"
+  xmlns="http://www.w3.org/1999/xhtml"
+>
+  <head>
+    <meta charset="UTF-8" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We"
+      crossorigin="anonymous"
+    />
+    <title>Suggest Friends</title>
+  </head>
+  <body>
+    <div th:replace="header :: header"></div>
 
-            </form>
-<!--            <form method="post" th:action="@{'/follow?id='+${user.id}}">-->
-<!--                <button class="btn btn-primary" th:if="${userFollow.contains(user) != true and userInfo != user.username}" type="submit">Follow</button>-->
-<!--            </form>-->
+    <style>
+      body {
+        background-color: darkgray;
+      }
+    </style>
+    <main>
+      <h1>People You May Know</h1>
+      <br />
+      <div class="card-group">
+        <div class="card" th:each="user: ${allusers}" th:if="${user.username!= logged.username}">
+          <a th:href="@{user/(id=${user.id})}">        <img style="width:150px"
+            src="https://us.123rf.com/450wm/solazell/solazell1406/solazell140600002/29687438-profile.jpg?ver=6"
+            alt=""
+          />
+          </button></a>
+          <div class="card-body">
+            <h5 class="card-title" th:text="${user.firstName+ '  ' + user.lastName}"></h5>
+            <p class="card-text" th:text="${user.dateOfBirth}"></p>
+            <p class="card-text"><small class="text-muted" th:text="${user.bio}"></small></p>
+          </div>
+          <form method="post" action="/follow" th:if="${whoIFollow.contains(user) != true and userInfo != user.username}" >
+            <button
+              style="align-items: center"
+              type="submit"
+              class="btn btn-primary"
+            >
+              Follow Me!
+            </button>
+            <input type="hidden" name="id" th:value="${user.id}" />
+          </form>
+          <a th:href="@{user/(id=${user.id})}"> <button type="submit">Visit Profile</button></a> 
+
         </div>
-    </div>
-</main>
+      </div>
+  </main>
+    <div th:replace="footer :: footer"></div>
 
-</body>
-<div th:replace="footer :: footer"></div>
+  </body>
 
 </html>

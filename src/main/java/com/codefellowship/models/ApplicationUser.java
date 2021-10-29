@@ -27,20 +27,15 @@ public class ApplicationUser implements UserDetails {
     @OneToMany (mappedBy = "applicationUser", fetch = FetchType.EAGER)
     private List<Post> posts;
 
-    @ManyToMany(cascade={CascadeType.ALL})
-    @JoinTable(name="following-follower",
-            joinColumns={@JoinColumn(name="follower-id")},
-            inverseJoinColumns={@JoinColumn(name="following-id")})
-    private Set<ApplicationUser> followers = new HashSet<>();
-
-    @ManyToMany(mappedBy="followers")
-    private Set<ApplicationUser> following = new HashSet<>();
-
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "follower_follower", joinColumns = @JoinColumn(name = "from_id"), inverseJoinColumns = @JoinColumn(name = "to_id"))
+    Set<ApplicationUser> followers;
+    @ManyToMany(mappedBy = "followers", fetch = FetchType.EAGER)
+    Set<ApplicationUser> following;
     public ApplicationUser() {
     }
 
     public ApplicationUser(String username, String password, String firstName, String lastName, String dateOfBirth, String bio) {
-        this.id = id;
         this.username = username;
         this.password = password;
         this.firstName = firstName;
